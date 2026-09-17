@@ -1,9 +1,10 @@
 import { NavLink, Outlet } from 'react-router-dom';
-import { FileText, IdCard, LayoutTemplate, MoonStar } from 'lucide-react';
+import { FileText, IdCard, LayoutTemplate, MoonStar, Share2 } from 'lucide-react';
 import { ThemeToggle } from './components/common/ThemeToggle';
 
 const navItems = [
   { to: '/resumes', label: '简历', icon: FileText },
+  { to: '/shares', label: '分享', icon: Share2 },
   { to: '/templates', label: '模板', icon: LayoutTemplate },
   { to: '/profile', label: '个人资料', icon: IdCard },
 ];
