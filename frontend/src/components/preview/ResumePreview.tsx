@@ -2,6 +2,7 @@ import { CSSProperties } from 'react';
 import { useProfileStore } from '../../stores/profile';
 import { getTemplateById, ResumeTemplate } from '../../stores/template';
 import { educationLevelLabels, skillCategoryLabels, skillLevelLabels } from '../../types/enums';
+import { Profile } from '../../types/profile';
 import { Resume } from '../../types/resume';
 import { formatDateRange } from '../../utils/format';
 
@@ -9,6 +10,11 @@ interface ResumePreviewProps {
   resume: Resume;
   template?: ResumeTemplate;
   fontSize?: number;
+  /**
+   * 覆盖空字段回填所用的资料。分享快照页传入快照中的资料，
+   * 保证视图只反映生成时刻的内容，不跟随本机资料变化。
+   */
+  profileFallback?: Profile;
 }
 
 function SectionTitle({ children, accent }: { children: string; accent: string }) {
@@ -19,8 +25,9 @@ function SectionTitle({ children, accent }: { children: string; accent: string }
   );
 }
 
-export function ResumePreview({ resume, template = getTemplateById(resume.templateId), fontSize = 14 }: ResumePreviewProps) {
-  const profile = useProfileStore((state) => state.profile);
+export function ResumePreview({ resume, template = getTemplateById(resume.templateId), fontSize = 14, profileFallback }: ResumePreviewProps) {
+  const storeProfile = useProfileStore((state) => state.profile);
+  const profile = profileFallback ?? storeProfile;
   const info = {
     fullName: resume.basicInfo.fullName || profile.fullName,
     headline: resume.basicInfo.headline || profile.headline,

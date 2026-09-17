@@ -1,5 +1,6 @@
 import { Profile } from '../types/profile';
 import { Resume } from '../types/resume';
+import { ShareRecord } from '../types/share';
 import { readStorage, storageKeys, writeStorage } from '../utils/storage';
 
 export interface WorkspaceSnapshot {
@@ -9,6 +10,7 @@ export interface WorkspaceSnapshot {
   profile: Profile;
   selectedTemplateId: string;
   theme: 'light' | 'dark';
+  shareRecords: ShareRecord[];
 }
 
 export function readWorkspaceSnapshot(fallbackProfile: Profile): WorkspaceSnapshot {
@@ -19,6 +21,7 @@ export function readWorkspaceSnapshot(fallbackProfile: Profile): WorkspaceSnapsh
     profile: readStorage<Profile>(storageKeys.profile, fallbackProfile),
     selectedTemplateId: readStorage<string>(storageKeys.template, 'atelier'),
     theme: readStorage<'light' | 'dark'>(storageKeys.theme, 'light'),
+    shareRecords: readStorage<ShareRecord[]>(storageKeys.shareRecords, []),
   };
 }
 
@@ -28,5 +31,6 @@ export function writeWorkspaceSnapshot(snapshot: WorkspaceSnapshot): void {
   writeStorage(storageKeys.profile, snapshot.profile);
   writeStorage(storageKeys.template, snapshot.selectedTemplateId);
   writeStorage(storageKeys.theme, snapshot.theme);
+  // 兼容旧版备份文件：缺少分享记录字段时按空列表恢复
+  writeStorage(storageKeys.shareRecords, snapshot.shareRecords ?? []);
 }
-

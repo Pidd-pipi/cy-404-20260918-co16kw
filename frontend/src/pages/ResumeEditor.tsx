@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Download, LayoutTemplate, UserRound } from 'lucide-react';
+import { Download, LayoutTemplate, Share2, UserRound } from 'lucide-react';
 import { BasicInfoPanel } from '../components/editor/BasicInfoPanel';
 import { ModuleSidebar } from '../components/editor/ModuleSidebar';
+import { ShareDialog } from '../components/editor/ShareDialog';
 import { Button } from '../components/common/Button';
 import { EmptyState } from '../components/common/EmptyState';
 import { SectionEditor } from '../components/common/SectionEditor';
@@ -15,6 +16,7 @@ import { ResumeSection, ResumeSectionType } from '../types/resume';
 export function ResumeEditor() {
   const { id } = useParams();
   const [activeSectionId, setActiveSectionId] = useState<ResumeSectionType>('summary');
+  const [shareOpen, setShareOpen] = useState(false);
   const resumes = useResumeStore((state) => state.resumes);
   const updateResume = useResumeStore((state) => state.updateResume);
   const updateBasicInfo = useResumeStore((state) => state.updateBasicInfo);
@@ -90,6 +92,9 @@ export function ResumeEditor() {
           <Button icon={<UserRound size={16} aria-hidden />} onClick={syncProfile}>
             同步资料
           </Button>
+          <Button icon={<Share2 size={16} aria-hidden />} onClick={() => setShareOpen(true)}>
+            分享
+          </Button>
           <Link
             className="inline-flex min-h-10 items-center gap-2 rounded-md border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm font-semibold hover:bg-[var(--surface-alt)]"
             to="/templates"
@@ -121,6 +126,7 @@ export function ResumeEditor() {
           <ResumePreview resume={resume} fontSize={10} />
         </aside>
       </div>
+      <ShareDialog open={shareOpen} resume={resume} onClose={() => setShareOpen(false)} />
     </div>
   );
 }
